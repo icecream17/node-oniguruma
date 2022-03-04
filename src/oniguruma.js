@@ -9,26 +9,24 @@ function OnigRegExp(source) {
 }
 
 OnigRegExp.prototype.captureIndicesForMatch = function(string, match) {
-  var capture, captureIndices, i, len;
-  if (match != null) {
-    captureIndices = match.captureIndices;
-    string = this.scanner.convertToString(string);
-    for (i = 0, len = captureIndices.length; i < len; i++) {
-      capture = captureIndices[i];
-      capture.match = string.slice(capture.start, capture.end);
-    }
-    return captureIndices;
-  } else {
+  if (match == null) {
     return null;
   }
+
+  const captureIndices = match.captureIndices;
+  string = this.scanner.convertToString(string);
+  for (let i = 0, len = captureIndices.length; i < len; i++) {
+    const capture = captureIndices[i];
+    capture.match = string.slice(capture.start, capture.end);
+  }
+  return captureIndices;
 };
 
 OnigRegExp.prototype.searchSync = function(string, startPosition) {
-  var match;
   if (startPosition == null) {
     startPosition = 0;
   }
-  match = this.scanner.findNextMatchSync(string, startPosition);
+  const match = this.scanner.findNextMatchSync(string, startPosition);
   return this.captureIndicesForMatch(string, match);
 };
 
@@ -78,7 +76,7 @@ OnigScanner.prototype.findNextMatchSync = function (string, startPosition) {
   string = this.convertToString(string)
   startPosition = this.convertToNumber(startPosition)
 
-  let match = this._findNextMatchSync(string, startPosition)
+  const match = this._findNextMatchSync(string, startPosition)
   if (match) match.scanner = this
   return match
 }
